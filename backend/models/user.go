@@ -10,8 +10,8 @@ type UserModel struct {
 }
 
 type GetUserQuery struct {
-	Limit int	`form:"limit" default:"10"`
-	Offset int	`form:"offset" default:"0"`
+	Limit int	`form:"limit"`
+	Offset int	`form:"offset"`
 }
 
 type GetUserParam struct {

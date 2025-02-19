@@ -42,7 +42,7 @@ func (h *UserHandler) getAllUsers(ctx *gin.Context) {
 	}
 
 	if query.Limit == 0 {
-		query.Limit = 1
+		query.Limit = 10
 	}
 
 	// Get users

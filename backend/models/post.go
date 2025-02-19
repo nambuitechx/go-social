@@ -11,8 +11,8 @@ type PostModel struct {
 }
 
 type GetPostQuery struct {
-	Limit int	`form:"limit" default:"10"`
-	Offset int	`form:"offset" default:"0"`
+	Limit int	`form:"limit"`
+	Offset int	`form:"offset"`
 }
 
 type GetPostParam struct {
