@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 
 	"github.com/nambuitechx/go-social/configs"
 	"github.com/nambuitechx/go-social/handlers"
@@ -24,8 +25,18 @@ func getEngine() *gin.Engine {
 	userService := services.NewUserService(userRepository)	
 	postService := services.NewPostService(postRepository)	
 
-	// Routes
+	// Engine
 	engine := gin.Default()
+
+	// Middlewares
+	config := cors.DefaultConfig()
+    config.AllowAllOrigins = true
+    config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
+    config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
+    config.ExposeHeaders = []string{"Content-Length"}
+    config.AllowCredentials = true
+
+	engine.Use(cors.New(config))
 
 	engine.GET("/health", checkHealth)
 	handlers.InitUserHandler(&handlers.HandlerConfig{ Engine: engine }, userService)
