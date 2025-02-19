@@ -27,8 +27,8 @@ func (s *PostService) GetPostById(id *string) (*models.PostModel, error) {
 	return post, err
 }
 
-func (s *PostService) CreatePost(payload *models.CreatePostPayload) (*models.PostModel, error) {
-	post, err := s.PostRepository.InsertPost(payload)
+func (s *PostService) CreatePost(payload *models.CreatePostPayload, userId string) (*models.PostModel, error) {
+	post, err := s.PostRepository.InsertPost(payload, userId)
 	return post, err
 }
 

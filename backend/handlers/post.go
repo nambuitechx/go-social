@@ -73,6 +73,7 @@ func (h *PostHandler) getPostById(ctx *gin.Context) {
 
 func (h *PostHandler) createPost(ctx *gin.Context) {
 	// Get payload
+	userId := "2ad2d0c7-1965-4109-8565-69407273b28c" // email: nambui - for test without auth
 	payload := &models.CreatePostPayload{}
 
 	if err := ctx.ShouldBindJSON(payload); err != nil {
@@ -81,7 +82,7 @@ func (h *PostHandler) createPost(ctx *gin.Context) {
 	}
 
 	// Create post
-	post, err := h.PostService.CreatePost(payload);
+	post, err := h.PostService.CreatePost(payload, userId);
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Create post failed", "error": err.Error() })

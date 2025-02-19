@@ -38,10 +38,10 @@ func (r *PostRepository) SelectPostById(id *string) (*models.PostModel, error) {
 	return post, err
 }
 
-func (r *PostRepository) InsertPost(payload *models.CreatePostPayload) (*models.PostModel, error) {
+func (r *PostRepository) InsertPost(payload *models.CreatePostPayload, userId string) (*models.PostModel, error) {
 	var post = models.PostModel{}
 	statement := "INSERT INTO posts(id, content, user_id) VALUES($1, $2, $3) RETURNING id, content, user_id, created_at, updated_at"
-	r.DB.Get(&post, statement, uuid.New().String(), payload.Content, payload.Content)
+	r.DB.Get(&post, statement, uuid.New().String(), payload.Content, userId)
 	return &post, nil
 }
 
