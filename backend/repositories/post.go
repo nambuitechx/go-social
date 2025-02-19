@@ -34,15 +34,14 @@ func (r *PostRepository) SelectPostById(id *string) (*models.PostModel, error) {
 
 	statement := "SELECT id, content, user_id, created_at, updated_at FROM posts WHERE id = $1"
 	err := r.DB.Get(post, statement, *id)
-	
 	return post, err
 }
 
 func (r *PostRepository) InsertPost(payload *models.CreatePostPayload, userId string) (*models.PostModel, error) {
 	var post = models.PostModel{}
 	statement := "INSERT INTO posts(id, content, user_id) VALUES($1, $2, $3) RETURNING id, content, user_id, created_at, updated_at"
-	r.DB.Get(&post, statement, uuid.New().String(), payload.Content, userId)
-	return &post, nil
+	err := r.DB.Get(&post, statement, uuid.New().String(), payload.Content, userId)
+	return &post, err
 }
 
 func (r *PostRepository) DeletePostById(id *string) error {

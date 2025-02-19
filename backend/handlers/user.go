@@ -46,7 +46,12 @@ func (h *UserHandler) getAllUsers(ctx *gin.Context) {
 	}
 
 	// Get users
-	users := h.UserService.GetAllUsers(&query.Limit, &query.Offset)
+	users, err := h.UserService.GetAllUsers(&query.Limit, &query.Offset)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Get all users failed", "error": err.Error() })
+		return
+	}
 
 	ctx.JSON(http.StatusOK, gin.H{ "message": "Get all users successfully", "data": users })
 }

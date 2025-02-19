@@ -17,9 +17,9 @@ func (s *UserService) Health() string {
 	return "User service is available"
 }
 
-func (s *UserService) GetAllUsers(limit *int, offset *int) []models.UserModel {
-	users := s.UserRepository.SelectUsers(limit, offset)
-	return users
+func (s *UserService) GetAllUsers(limit *int, offset *int) ([]models.UserModel, error) {
+	users, err := s.UserRepository.SelectUsers(limit, offset)
+	return users, err
 }
 
 func (s *UserService) GetUserById(id *string) (*models.UserModel, error) {

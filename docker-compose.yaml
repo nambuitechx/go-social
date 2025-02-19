@@ -6,12 +6,13 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:
 
 services:
   postgres:
-    # build:
-    #   context: postgres
-    #   dockerfile: Dockerfile
+    build:
+      context: postgres
+      dockerfile: Dockerfile
     image: go-social/postgres
     ports:
       - "5432:5432"
@@ -25,10 +26,23 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: always
   
+  redis:
+    build:
+      context: redis
+      dockerfile: Dockerfile
+    image: go-social/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis_data:/data
+    restart: always
+  
   backend:
-    # build:
-      #   context: backend
-      #   dockerfile: Dockerfile
+    build:
+        context: backend
+        dockerfile: Dockerfile
     image: go-social/backend
     ports:
       - "8000:8000"

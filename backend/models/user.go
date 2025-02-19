@@ -3,10 +3,10 @@ package models
 import "time"
 
 type UserModel struct {
-	ID			string		`db:"id"`
-	Email		string		`db:"email"`
-	CreatedAt	time.Time	`db:"created_at"`
-	UpdatedAt	time.Time	`db:"updated_at"`
+	ID			string		`db:"id" json:"id"`
+	Email		string		`db:"email" json:"email"`
+	CreatedAt	time.Time	`db:"created_at" json:"createdAt"`
+	UpdatedAt	time.Time	`db:"updated_at" json:"updatedAt"`
 }
 
 type GetUserQuery struct {
