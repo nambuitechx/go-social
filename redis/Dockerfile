@@ -1,4 +1,4 @@
-FROM redis:7-alpine
+FROM redis:7
 
 COPY redis.conf /usr/local/etc/redis/redis.conf
 COPY users.acl /etc/redis/users.acl

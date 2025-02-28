@@ -7,6 +7,7 @@ networks:
 volumes:
   postgres_data:
   redis_data:
+  prometheus_data:
 
 services:
   postgres:
@@ -37,6 +38,19 @@ services:
       - app-network
     volumes:
       - redis_data:/data
+    restart: always
+  
+  prometheus:
+    build:
+      context: prometheus
+      dockerfile: Dockerfile
+    image: go-social/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+    volumes:
+      - prometheus_data:/prometheus
     restart: always
   
   backend:
