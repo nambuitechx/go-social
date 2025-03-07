@@ -14,8 +14,8 @@ type GetUserQuery struct {
 	Offset int	`form:"offset"`
 }
 
-type GetUserParam struct {
-	ID string	`uri:"id"`
+type GetUserByIdParam struct {
+	ID string	`uri:"id" binding:"required"`
 }
 
 type CreateUserPayload struct {

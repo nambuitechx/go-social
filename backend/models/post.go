@@ -15,8 +15,8 @@ type GetPostQuery struct {
 	Offset int	`form:"offset"`
 }
 
-type GetPostParam struct {
-	ID string	`uri:"id"`
+type GetPostByIdParam struct {
+	ID string	`uri:"id" binding:"required"`
 }
 
 type CreatePostPayload struct {

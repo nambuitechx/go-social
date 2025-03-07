@@ -53,7 +53,7 @@ func (h *PostHandler) getAllPosts(ctx *gin.Context) {
 
 func (h *PostHandler) getPostById(ctx *gin.Context) {
 	// Get param and validate
-	param := &models.GetPostParam{}
+	param := &models.GetPostByIdParam{}
 
 	if err := ctx.ShouldBindUri(param); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Invalid param", "error": err.Error() })
@@ -94,7 +94,7 @@ func (h *PostHandler) createPost(ctx *gin.Context) {
 
 func (h *PostHandler) deletePostById(ctx *gin.Context) {
 	// Get param and validate
-	param := &models.GetPostParam{}
+	param := &models.GetPostByIdParam{}
 
 	if err := ctx.ShouldBindUri(param); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Invalid param", "error": err.Error() })

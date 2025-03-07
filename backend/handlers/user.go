@@ -58,7 +58,7 @@ func (h *UserHandler) getAllUsers(ctx *gin.Context) {
 
 func (h *UserHandler) getUserById(ctx *gin.Context) {
 	// Get param and validate
-	param := &models.GetUserParam{}
+	param := &models.GetUserByIdParam{}
 
 	if err := ctx.ShouldBindUri(param); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Invalid param", "error": err.Error() })
@@ -98,7 +98,7 @@ func (h *UserHandler) createUser(ctx *gin.Context) {
 
 func (h *UserHandler) deleteUserById(ctx *gin.Context) {
 	// Get param and validate
-	param := &models.GetUserParam{}
+	param := &models.GetUserByIdParam{}
 
 	if err := ctx.ShouldBindUri(param); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Invalid param", "error": err.Error() })
