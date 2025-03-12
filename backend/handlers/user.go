@@ -13,18 +13,20 @@ type UserHandler struct {
 	UserService *services.UserService
 }
 
-func InitUserHandler(c *HandlerConfig, userService *services.UserService) {
+func InitUserHandler(e *gin.Engine, userService *services.UserService) {
 	// Init handler
 	h := &UserHandler{ UserService: userService }
 
 	// Add routes to engine
-	g := c.Engine.Group("api/v1/users")
+	g := e.Group("api/v1/users")
 	{
 		g.GET("/health", h.health)
 		g.GET("/:id", h.getUserById)
+		g.GET("/email/:email", h.getUserByEmail)
 		g.GET("", h.getAllUsers)
 		g.POST("", h.createUser)
 		g.DELETE("/:id", h.deleteUserById)
+		g.DELETE("/email/:email", h.deleteUserByEmail)
 	}
 }
 
@@ -76,6 +78,26 @@ func (h *UserHandler) getUserById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{ "message": "Get user by id successfully", "data": user })
 }
 
+func (h *UserHandler) getUserByEmail(ctx *gin.Context) {
+	// Get param and validate
+	param := &models.GetUserByEmailParam{}
+
+	if err := ctx.ShouldBindUri(param); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Invalid param", "error": err.Error() })
+		return
+	}
+
+	// Get user
+	user, err := h.UserService.GetUserByEmail(&param.Email)
+
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{ "message": "User not found", "error": err.Error() })
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{ "message": "Get user by email successfully", "data": user })
+}
+
 func (h *UserHandler) createUser(ctx *gin.Context) {
 	// Get payload
 	payload := &models.CreateUserPayload{}
@@ -114,4 +136,24 @@ func (h *UserHandler) deleteUserById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{ "message": "Delete user by id successfully" })
+}
+
+func (h *UserHandler) deleteUserByEmail(ctx *gin.Context) {
+	// Get param and validate
+	param := &models.GetUserByEmailParam{}
+
+	if err := ctx.ShouldBindUri(param); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{ "message": "Invalid param", "error": err.Error() })
+		return
+	}
+
+	// Delete user
+	err := h.UserService.DeleteUserByEmail(&param.Email)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{ "message": "Delete user by email failed", "error": err.Error() })
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{ "message": "Delete user by email successfully" })
 }

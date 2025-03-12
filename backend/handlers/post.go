@@ -13,12 +13,13 @@ type PostHandler struct {
 	PostService *services.PostService
 }
 
-func InitPostHandler(c *HandlerConfig, postService *services.PostService) {
+func InitPostHandler(e *gin.Engine, postService *services.PostService) {
 	// Init handler
 	h := &PostHandler{ PostService: postService }
 
 	// Add routes to engine
-	g := c.Engine.Group("api/v1/posts")
+	g := e.Group("api/v1/posts")
+	g.Use(services.AuthenticateMiddleware())
 	{
 		g.GET("/health", h.health)
 		g.GET("/:id", h.getPostById)

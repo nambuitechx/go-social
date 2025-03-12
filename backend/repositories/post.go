@@ -1,8 +1,10 @@
 package repositories
 
 import (
-	"github.com/jmoiron/sqlx"
+	"time"
+
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/nambuitechx/go-social/models"
 )
@@ -39,8 +41,18 @@ func (r *PostRepository) SelectPostById(id *string) (*models.PostModel, error) {
 
 func (r *PostRepository) InsertPost(payload *models.CreatePostPayload, userId string) (*models.PostModel, error) {
 	var post = models.PostModel{}
-	statement := "INSERT INTO posts(id, content, user_id) VALUES($1, $2, $3) RETURNING id, content, user_id, created_at, updated_at"
-	err := r.DB.Get(&post, statement, uuid.New().String(), payload.Content, userId)
+	statement := "INSERT INTO posts(id, content, user_id, created_at, updated_at) VALUES($1, $2, $3, $4, $5) RETURNING id, content, user_id, created_at, updated_at"
+	id := uuid.New().String()
+	now := time.Now().Unix()
+	err := r.DB.Get(
+		&post,
+		statement,
+		id,
+		payload.Content,
+		userId,
+		now,
+		now,
+	)
 	return &post, err
 }
 

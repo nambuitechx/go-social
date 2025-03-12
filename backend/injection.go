@@ -31,7 +31,7 @@ func getEngine() *gin.Engine {
 	// Middlewares
 	config := cors.DefaultConfig()
     config.AllowAllOrigins = true
-    config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
+    config.AllowMethods = []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"}
     config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
     config.ExposeHeaders = []string{"Content-Length"}
     config.AllowCredentials = true
@@ -39,8 +39,8 @@ func getEngine() *gin.Engine {
 	engine.Use(cors.New(config))
 
 	engine.GET("/health", checkHealth)
-	handlers.InitUserHandler(&handlers.HandlerConfig{ Engine: engine }, userService)
-	handlers.InitPostHandler(&handlers.HandlerConfig{ Engine: engine }, postService)
+	handlers.InitUserHandler(engine, userService)
+	handlers.InitPostHandler(engine, postService)
 
 	return engine
 }

@@ -40,7 +40,7 @@ up_kafka:
 up: up_postgres up_redis up_prometheus up_kafka
 
 down:
-	docker compose down --volumes
+	docker compose down
 
 # Đăng nhập vào ECR
 login:

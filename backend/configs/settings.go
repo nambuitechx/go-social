@@ -9,14 +9,16 @@ import (
 )
 
 type Settings struct {
-	ServerHost string
-	ServerPort int
+	ServerHost 			string
+	ServerPort 			int
 
-	DatabaseHost string
-	DatabasePort int
-	DatabaseName string
-	DatabaseUser string
-	DatabasePassword string
+	DatabaseHost 		string
+	DatabasePort 		int
+	DatabaseName 		string
+	DatabaseUser 		string
+	DatabasePassword	string
+
+	JwtSecretKey		string
 }
 
 func NewSettings() *Settings {
@@ -89,4 +91,14 @@ func NewSettings() *Settings {
 	}
 
 	return settings
+}
+
+func GetJwtSecret() string {
+	jwtSecretKey, ok := os.LookupEnv("JWT_SECRET_KEY")
+
+	if ok {
+		return jwtSecretKey
+	} else {
+		return "my-secret"
+	}
 }
