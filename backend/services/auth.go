@@ -59,7 +59,7 @@ func (s *AuthService) Login(payload *models.CreateUserPayload) (*models.TokenInf
 		"exp": time.Now().Add(time.Minute * 5).Unix(),
 	})
 
-	tokenString, err := token.SignedString(secretKey)
+	tokenString, err := token.SignedString([]byte(secretKey))
 
 	if err != nil {
 		return nil, err
@@ -74,14 +74,13 @@ func ValidateToken(payload *models.TokenInfo) (*models.UserInfo, error) {
 	tokenString := payload.Token
 	userInfo := &models.UserInfo{}
 
-
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 	
 		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-		return secretKey, nil
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {
@@ -89,6 +88,10 @@ func ValidateToken(payload *models.TokenInfo) (*models.UserInfo, error) {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		if exp := claims["exp"].(float64); exp < float64(time.Now().Unix()) {
+			return nil, errors.New("token is expired")
+		}
+
 		userInfo.ID = claims["id"].(string)
 		userInfo.Email = claims["email"].(string)
 	} else {
@@ -103,7 +106,8 @@ func AuthenticateMiddleware() gin.HandlerFunc {
 		authHeader := c.GetHeader("Authorization")
 
 		if len(authHeader) < 8 {
-			c.JSON(http.StatusUnauthorized, gin.H{ "message": "unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{ "message": "Invalid authorization header"})
+			c.Abort()
 			return
 		}
 
@@ -114,10 +118,12 @@ func AuthenticateMiddleware() gin.HandlerFunc {
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{ "message": err.Error()})
+			c.Abort()
 			return
 		}
 
-		c.Set("user", userInfo)
+		c.Set("userId", userInfo.ID)
+		c.Set("userEmail", userInfo.Email)
 		c.Next()
 	}
 }

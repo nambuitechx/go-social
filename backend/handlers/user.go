@@ -115,7 +115,7 @@ func (h *UserHandler) createUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{ "message": "Create user successfully", "data": user })
+	ctx.JSON(http.StatusCreated, gin.H{ "message": "Create user successfully", "data": user })
 }
 
 func (h *UserHandler) deleteUserById(ctx *gin.Context) {

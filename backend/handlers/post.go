@@ -34,6 +34,9 @@ func (h *PostHandler) health(ctx *gin.Context) {
 }
 
 func (h *PostHandler) getAllPosts(ctx *gin.Context) {
+	// Get userId
+	// userId := ctx.GetString("userId")
+
 	// Get query and validate
 	query := &models.GetPostQuery{}
 
@@ -90,7 +93,7 @@ func (h *PostHandler) createPost(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{ "message": "Create post successfully", "data": post })
+	ctx.JSON(http.StatusCreated, gin.H{ "message": "Create post successfully", "data": post })
 }
 
 func (h *PostHandler) deletePostById(ctx *gin.Context) {

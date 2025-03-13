@@ -22,8 +22,9 @@ func getEngine() *gin.Engine {
 	postRepository := repositories.NewPostRepository(db)
 
 	// Services
+	authService := services.NewAuthService(userRepository)
 	userService := services.NewUserService(userRepository)	
-	postService := services.NewPostService(postRepository)	
+	postService := services.NewPostService(postRepository)
 
 	// Engine
 	engine := gin.Default()
@@ -39,6 +40,7 @@ func getEngine() *gin.Engine {
 	engine.Use(cors.New(config))
 
 	engine.GET("/health", checkHealth)
+	handlers.InitAuthHandler(engine, authService)
 	handlers.InitUserHandler(engine, userService)
 	handlers.InitPostHandler(engine, postService)
 
