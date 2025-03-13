@@ -13,13 +13,15 @@ import (
 )
 
 func getEngine() *gin.Engine {
-	// Connect database
+	// Config settings
 	settings := configs.NewSettings()
-	db := configs.NewDatabaseConnection(settings).DB
+
+	// Connect database
+	db := configs.NewDatabaseConnection(settings)
 
 	// Repositories
-	userRepository := repositories.NewUserRepository(db)
-	postRepository := repositories.NewPostRepository(db)
+	userRepository := repositories.NewUserRepository(db.DB)
+	postRepository := repositories.NewPostRepository(db.DB)
 
 	// Services
 	authService := services.NewAuthService(userRepository)
